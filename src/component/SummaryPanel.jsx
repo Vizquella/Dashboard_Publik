@@ -4,6 +4,14 @@ import { Activity, Calendar } from 'lucide-react';
 export default function SummaryPanel({ activeKpi, dateRangeStr }) {
   if (!activeKpi) return null;
 
+  // Kalkulasi otomatis untuk persentase Gender
+  const total = activeKpi.total || 0;
+  const male = activeKpi.male || 0;
+  const female = activeKpi.female || 0;
+  
+  const malePerc = total > 0 ? Math.round((male / total) * 100) : 0;
+  const femalePerc = total > 0 ? Math.round((female / total) * 100) : 0;
+
   return (
     <section className="relative mb-8 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition-all duration-300">
       
@@ -13,7 +21,7 @@ export default function SummaryPanel({ activeKpi, dateRangeStr }) {
         style={{ backgroundColor: activeKpi.color }}
       ></div>
 
-      <div className="flex flex-col items-center justify-between gap-8 p-8 md:flex-row md:p-10">
+      <div className="flex flex-col justify-between gap-10 p-8 md:flex-row md:p-10 lg:gap-16">
         
         {/* KOLOM KIRI: Info Utama & Total Kasus */}
         <div className="flex w-full flex-1 flex-col items-center text-center md:items-start md:text-left">
@@ -34,7 +42,7 @@ export default function SummaryPanel({ activeKpi, dateRangeStr }) {
               <Activity size={32} style={{ color: activeKpi.color }} />
             </div>
             <span className="text-6xl font-black tracking-tighter text-slate-800 md:text-7xl">
-              {Number(activeKpi.total || 0).toLocaleString('id-ID')}
+              {Number(total).toLocaleString('id-ID')}
             </span>
           </div>
 
@@ -44,60 +52,79 @@ export default function SummaryPanel({ activeKpi, dateRangeStr }) {
           </div>
         </div>
 
-        {/* KOLOM TENGAH: Garis Cabang (Sembunyi di Mobile) */}
-        <div className="hidden flex-col items-center justify-center px-4 opacity-40 md:flex">
-          <svg width="100" height="120" viewBox="0 0 100 120" fill="none" className="stroke-slate-400">
-            {/* Garis Horizontal Masuk */}
-            <path d="M0,60 L30,60" strokeWidth="2" strokeDasharray="4 4" />
-            {/* Garis Vertikal */}
-            <path d="M30,25 L30,95" strokeWidth="2" strokeDasharray="4 4" />
-            {/* Garis ke Atas (Laki-laki) */}
-            <path d="M30,25 L90,25" strokeWidth="2" strokeDasharray="4 4" />
-            <path d="M85,20 L92,25 L85,30" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            {/* Garis ke Bawah (Perempuan) */}
-            <path d="M30,95 L90,95" strokeWidth="2" strokeDasharray="4 4" />
-            <path d="M85,90 L92,95 L85,100" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-
-        {/* KOLOM KANAN: Breakdown Gender */}
-        <div className="flex w-full flex-1 flex-col gap-4 md:w-auto">
+        {/* KOLOM KANAN: Visualisasi Rasio Gender (Desain Baru) */}
+        <div className="flex w-full flex-col justify-center md:w-[500px] xl:w-[600px]">
           
-          {/* Sub-Kartu Laki-laki */}
-          <div className="group flex items-center justify-between rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-100 transition-all hover:bg-white hover:shadow-md">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-500 transition-transform group-hover:scale-110">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-                  <path d="M16 3h5v5" />
-                  <path d="m21 3-6.75 6.75" />
-                  <circle cx="10" cy="14" r="6" />
-                </svg>
-              </div>
-              <span className="text-sm font-bold uppercase tracking-wider text-slate-500">Laki - laki</span>
+          {/* Bagian Atas: Bar Rasio */}
+          <div className="mb-6">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                Rasio Gender
+              </span>
+              <span className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-1.5 text-[11px] font-bold text-slate-500 shadow-sm">
+                {male > female ? 'Mayoritas Laki-laki' : female > male ? 'Mayoritas Perempuan' : 'Sebanding'}
+              </span>
             </div>
-            <span className="text-4xl font-extrabold tracking-tight text-slate-800">
-              {Number(activeKpi.male || 0).toLocaleString('id-ID')}
-            </span>
+            
+            {/* Progress Bar Ganda */}
+            <div className="flex h-4 w-full overflow-hidden rounded-full bg-slate-100 shadow-inner">
+              <div 
+                className="bg-blue-400 transition-all duration-1000 ease-out" 
+                style={{ width: `${malePerc}%` }}
+              ></div>
+              <div 
+                className="bg-pink-400 transition-all duration-1000 ease-out" 
+                style={{ width: `${femalePerc}%` }}
+              ></div>
+            </div>
+            
+            {/* Persentase */}
+            <div className="mt-2 flex items-center justify-between px-1">
+              <span className="text-sm font-extrabold text-blue-500">{malePerc}%</span>
+              <span className="text-sm font-extrabold text-pink-500">{femalePerc}%</span>
+            </div>
           </div>
 
-          {/* Sub-Kartu Perempuan */}
-          <div className="group flex items-center justify-between rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-100 transition-all hover:bg-white hover:shadow-md">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-pink-100 text-pink-500 transition-transform group-hover:scale-110">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-                  <circle cx="12" cy="9" r="6" />
-                  <path d="M12 15v7" />
-                  <path d="M9 19h6" />
-                </svg>
+          {/* Bagian Bawah: Kartu Laki-laki & Perempuan (Side-by-side) */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            
+            {/* Kartu Laki-laki */}
+            <div className="group flex items-center justify-between rounded-xl border border-slate-100 bg-white p-4 shadow-sm ring-1 ring-slate-50 transition-all hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-500 transition-transform group-hover:scale-110">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                    <path d="M16 3h5v5" />
+                    <path d="m21 3-6.75 6.75" />
+                    <circle cx="10" cy="14" r="6" />
+                  </svg>
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Laki - Laki</span>
               </div>
-              <span className="text-sm font-bold uppercase tracking-wider text-slate-500">Perempuan</span>
+              <span className="text-3xl font-black tracking-tight text-slate-800">
+                {Number(male).toLocaleString('id-ID')}
+              </span>
             </div>
-            <span className="text-4xl font-extrabold tracking-tight text-slate-800">
-              {Number(activeKpi.female || 0).toLocaleString('id-ID')}
-            </span>
-          </div>
 
+            {/* Kartu Perempuan */}
+            <div className="group flex items-center justify-between rounded-xl border border-slate-100 bg-white p-4 shadow-sm ring-1 ring-slate-50 transition-all hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-500 transition-transform group-hover:scale-110">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                    <circle cx="12" cy="9" r="6" />
+                    <path d="M12 15v7" />
+                    <path d="M9 19h6" />
+                  </svg>
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Perempuan</span>
+              </div>
+              <span className="text-3xl font-black tracking-tight text-slate-800">
+                {Number(female).toLocaleString('id-ID')}
+              </span>
+            </div>
+
+          </div>
         </div>
+
       </div>
     </section>
   );
