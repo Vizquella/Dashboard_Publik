@@ -89,6 +89,8 @@ export default function AdminDashboard() {
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
     localStorage.removeItem('isAdminAuth');
     navigate('/portal-petugas');
   };
@@ -143,6 +145,13 @@ export default function AdminDashboard() {
     setIsProcessing(true);
     setActionFeedback(null);
 
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      setActionFeedback({ type: 'error', message: 'Sesi login tidak ditemukan. Silakan login kembali.' });
+      handleLogout();
+      return;
+    }
+
     const formData = new FormData();
     if (withUploadFile) {
       if (!selectedFile) {
@@ -162,8 +171,17 @@ export default function AdminDashboard() {
     try {
       const response = await fetch(`${API_BASE_URL}/api/upload`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData,
       });
+
+      if (response.status === 401 || response.status === 403) {
+        alert("Sesi login Anda telah berakhir atau token tidak valid. Silakan login kembali.");
+        handleLogout();
+        return;
+      }
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Gagal memproses data server');

@@ -1,20 +1,48 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, ArrowLeft, Lock, User, AlertCircle } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Lock, User, AlertCircle, RefreshCw } from 'lucide-react';
+import { API_BASE_URL } from './config';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === 'admin' && password === 'admin123') {
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || 'Kredensial tidak cocok. Silakan coba lagi.');
+      }
+
+      // Simpan JWT Bearer Token yang diterbitkan oleh server
+      localStorage.setItem('adminToken', data.token);
+      localStorage.setItem('adminUser', data.username || 'admin');
       localStorage.setItem('isAdminAuth', 'true');
+      
+      setLoading(false);
       navigate('/portal-petugas/manajemen-data');
-    } else {
-      setError('Kredensial tidak cocok. Silakan periksa username dan password Anda.');
+    } catch (err) {
+      console.error("Login error:", err);
+      setError(err.message);
+      setLoading(false);
     }
   };
 
@@ -62,6 +90,7 @@ export default function AdminLogin() {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Masukkan username"
                   required
+                  disabled={loading}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-9 pr-3.5 text-xs font-semibold text-slate-900 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
                 />
               </div>
@@ -79,6 +108,7 @@ export default function AdminLogin() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  disabled={loading}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-9 pr-3.5 text-xs font-semibold text-slate-900 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition"
                 />
               </div>
@@ -86,14 +116,22 @@ export default function AdminLogin() {
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-slate-900 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition active:scale-[0.99]"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition active:scale-[0.99] disabled:bg-slate-400 cursor-pointer"
             >
-              Masuk ke Workspace
+              {loading ? (
+                <>
+                  <RefreshCw size={14} className="animate-spin" />
+                  <span>Memverifikasi Akun...</span>
+                </>
+              ) : (
+                <span>Masuk ke Workspace</span>
+              )}
             </button>
           </form>
 
           <div className="mt-5 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">
-            Kredensial Default: <span className="font-mono font-semibold text-slate-600">admin / admin123</span>
+            Kredensial Server: <span className="font-mono font-semibold text-slate-600">admin / admin123</span>
           </div>
         </div>
 
