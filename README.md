@@ -1,8 +1,25 @@
-# Sistem Informasi Surveilans Epidemiologi dan Pemantauan Morbiditas Terpadu
+<div align="center">
 
-Sistem Informasi Surveilans Epidemiologi Terpadu merupakan platform analitik kesehatan masyarakat berbasis web yang dirancang untuk mengintegrasikan, memproses, dan memvisualisasikan data rekam medis elektronik dari jaringan fasilitas kesehatan tingkat pertama (Puskesmas). 
+# Sistem Informasi Surveilans Epidemiologi
 
-Sistem ini mentransformasi data mentah rekam medis menjadi wawasan epidemiologi secara *real-time* berbasis standar klasifikasi penyakit internasional (*International Statistical Classification of Diseases and Related Health Problems 10th Revision* / ICD-10), dengan mengedepankan prinsip perlindungan data pribadi dan keandalan performa tinggi.
+**Platform Analitik Pemantauan Morbiditas Terpadu Fasilitas Pelayanan Kesehatan**
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License: MIT" /></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" /></a>
+  <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://recharts.org/"><img src="https://img.shields.io/badge/Recharts-22C55E?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Recharts" /></a>
+  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" /></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python_3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" /></a>
+  <a href="https://jwt.io/"><img src="https://img.shields.io/badge/JWT_Auth-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" alt="JWT Auth" /></a>
+</p>
+
+<p align="center">
+  Platform analitik kesehatan masyarakat berbasis web yang dirancang untuk mengintegrasikan, memproses, dan memvisualisasikan data rekam medis elektronik dari jaringan fasilitas kesehatan tingkat pertama (Puskesmas) secara <i>real-time</i> berbasis standar klasifikasi penyakit internasional (ICD-10) dengan pemrosesan data berlatensi nol dan otorisasi keamanan terpusat.
+</p>
+
+</div>
 
 ---
 
