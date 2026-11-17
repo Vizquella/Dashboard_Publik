@@ -97,38 +97,14 @@ export default function AuthPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-xs mb-3">
               <Activity size={24} />
             </div>
-            <h1 className="text-base font-bold text-slate-900">Sistem Surveilans Terpadu</h1>
+            <h1 className="text-base font-bold text-slate-900">
+              {mode === 'login' ? 'Masuk ke Sistem' : 'Daftar Akun Pengguna'}
+            </h1>
             <p className="text-xs text-slate-500 mt-0.5">
               {mode === 'login' 
-                ? 'Masuk untuk mengakses analitik epidemiologi' 
-                : 'Daftar akun untuk mengakses data surveilans'}
+                ? 'Gunakan akun Anda untuk mengakses dashboard surveilans' 
+                : 'Lengkapi data Anda untuk mendapatkan hak akses'}
             </p>
-          </div>
-
-          {/* Tab Pemilih Masuk / Daftar */}
-          <div className="flex rounded-xl bg-slate-100 p-1 mb-5">
-            <button
-              type="button"
-              onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
-              className={`flex-1 rounded-lg py-2 text-xs font-bold transition cursor-pointer ${
-                mode === 'login'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              Masuk
-            </button>
-            <button
-              type="button"
-              onClick={() => { setMode('register'); setError(''); setSuccess(''); }}
-              className={`flex-1 rounded-lg py-2 text-xs font-bold transition cursor-pointer ${
-                mode === 'register'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              Daftar Akun
-            </button>
           </div>
 
           {/* Pesan Kesalahan */}
@@ -263,6 +239,33 @@ export default function AuthPage() {
               )}
             </button>
           </form>
+
+          {/* Pertanyaan Navigasi Mode di Bawah Tombol */}
+          <div className="mt-5 pt-4 border-t border-slate-100 text-center text-xs">
+            {mode === 'login' ? (
+              <p className="text-slate-500">
+                Belum memiliki akun?{' '}
+                <button
+                  type="button"
+                  onClick={() => { setMode('register'); setError(''); setSuccess(''); }}
+                  className="font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer transition ml-1"
+                >
+                  Daftar akun di sini
+                </button>
+              </p>
+            ) : (
+              <p className="text-slate-500">
+                Sudah memiliki akun?{' '}
+                <button
+                  type="button"
+                  onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
+                  className="font-bold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer transition ml-1"
+                >
+                  Masuk ke sistem
+                </button>
+              </p>
+            )}
+          </div>
 
         </div>
 
