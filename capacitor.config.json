@@ -1,0 +1,9 @@
+{
+  "appId": "id.go.dinkes.surveilans",
+  "appName": "Surveilans Kesehatan",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true,
+    "androidScheme": "http"
+  }
+}
